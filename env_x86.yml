@@ -5,6 +5,7 @@ dependencies:
   - blas=1.0=mkl
   - ca-certificates=2019.1.23=0
   - certifi=2018.11.29=py36_0
+  - click=7.0=py36_0
   - cycler=0.10.0=py36hd299a41_0
   - freetype=2.9.1=ha9979f8_1
   - icc_rt=2019.0.0=h0cc432a_1

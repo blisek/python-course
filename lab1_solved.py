@@ -3,6 +3,7 @@ import math
 import typing as _t
 import numpy as np
 import sys
+import click
 from matplotlib.pyplot import plot, show, xlabel, ylabel
 
 
@@ -29,17 +30,17 @@ def task2():
         print('Invalid input: ' + e)
 
 
-def _task3_lowest(nums: _t.List[_t.Union[int, float]]) -> _t.Tuple[_t.Any, _t.Any]:
-    return min(enumerate(nums), key=lambda x: x[1])
-
-
-def task3():
-    sample_values = [5, 9, 1, 2, 4, 99, 13, 19]
-    index, value = _task3_lowest(sample_values)
+def task3(*args):
+    index, value = min(enumerate(args), key=lambda x: x[1])
     print(f'Lowest value: {value} with index: {index}')
 
 
-def _task4_plot(length: int):
+def task4(length: int):
+    try:
+        length = int(length)
+    except ValueError:
+        print(f'Podano nieprawidłową liczbę: {length}')
+        return
     if length < 0:
         length = abs(length)
     f_def = '2*(x*x)-1'
@@ -52,24 +53,12 @@ def _task4_plot(length: int):
     show()
 
 
-def task4():
-    if len(sys.argv) < 2:
-        sys.argv.insert(1, 50)
-    _task4_plot(int(sys.argv[1]))
+@click.command()
+@click.option('--task', default='task1', type=click.Choice(['task1', 'task2', 'task3', 'task4']))
+@click.argument('args', nargs=-1)
+def select_task(task, args):
+    getattr(sys.modules[__name__], task)(*args)
 
 
 if __name__ == '__main__':
-    tasks = [('task1', task1), ('task2', task2), ('task3', task3), ('task4', task4)]
-    while True:
-        try:
-            for inx, task in enumerate(tasks):
-                print(f'{inx}] {task[0]}')
-            choice = input('Choose: ')
-            if not choice or choice.lower() == 'q':
-                break
-            choice = int(choice)
-            choosen_f = tasks[choice]
-            print(f'Executing {choosen_f[0]}...')
-            choosen_f[1].__call__()
-        except:
-            continue
+    select_task()
