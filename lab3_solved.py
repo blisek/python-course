@@ -102,16 +102,16 @@ def compare_figures_fields(figures: typing.List[typing.List[typing.Any]]):
     Expected output would be 'The first figure (Circle) has larger field'
 
     >>> compare_figures_fields([['rhombus', 3, 4, 1], ['Triangle', 6, 2.5]])
-    The figure ['rhombus', 3, 4, 1] has largest field (6.000)
+    The figure ['Triangle', 6, 2.5] has largest field (7.500)
     Figures fields sorted descending:
-    - figure ['rhombus', 3, 4, 1] with field: 6.000
     - figure ['Triangle', 6, 2.5] with field: 7.500
+    - figure ['rhombus', 3, 4, 1] with field: 6.000
 
     """
     if not figures:
         raise ValueError('no figures given')
     pairs_of_calculated_fields = [(fig, _calculate_figure_fields(fig[0], *fig[1:])) for fig in figures]
-    fields_pairs_sorted = sorted(pairs_of_calculated_fields, key=lambda x: [1], reverse=True)
+    fields_pairs_sorted = sorted(pairs_of_calculated_fields, key=lambda x: x[1], reverse=True)
     print('The figure {0} has largest field ({1:.3f})'.format(*fields_pairs_sorted[0]))
     print('Figures fields sorted descending:')
     print('\n'.join([f'- figure {fig[0]} with field: {fig[1]:.3f}' for fig in fields_pairs_sorted]))
