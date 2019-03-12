@@ -9,13 +9,18 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
-def task0(yml_path: str):
-    with open(yml_path, 'r') as f:
-        parsed_inputs = yaml.load(f)
-        if not parsed_inputs:
-            return
-        parsed_inputs = list(parsed_inputs)
-    print('Parsed inputs: ', parsed_inputs)
+# stara wersja
+# def task0(yml_path: str):
+#     with open(yml_path, 'r') as f:
+#         parsed_inputs = yaml.load(f)
+#         if not parsed_inputs:
+#             return
+#         parsed_inputs = list(parsed_inputs)
+#     print('Parsed inputs: ', parsed_inputs)
+
+def task0():
+    import lab2_zad1
+    lab2_zad1.get_input_integer()
 
 
 def task1(x_radius: float, y_radius: float):
