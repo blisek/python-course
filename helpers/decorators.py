@@ -25,7 +25,11 @@ class cast_arguments:
             current_arg = args[i]
             current_arg_tp = type(current_arg)
             if dest_type is list and current_arg_tp is not list:
-                mapped_args.append([current_arg])
+                if mappings_len-1 == i and args_len > mappings_len:
+                    mapped_args.append(args[i:])
+                    break
+                else:
+                    mapped_args.append([current_arg])
             elif dest_type is tuple and current_arg_tp is not tuple:
                 mapped_args.append((current_arg,))
             elif dest_type is None or current_arg_tp is dest_type:
