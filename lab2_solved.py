@@ -4,9 +4,6 @@ import sys
 import click
 import typing
 import decimal
-import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 
 # stara wersja
@@ -47,7 +44,8 @@ def task1(x_radius: float, y_radius: float):
 
 def _task2_find(x: int, y: int):
     if x is None and y is None:
-        print(f'x = {x}, y = {y}')
+        # print(f'x = {x}, y = {y}')
+        raise ValueError
     elif x is None:
         if y % 2 != 0:
             print(f'y = {y} is not even!')
@@ -75,26 +73,35 @@ def _task2_find(x: int, y: int):
             print(f'x = {x} is divisible by y = {y}')
 
 
-#2 Find X & Y that satisfy: X is divisible by Y and both X & Y are even. (0.5p)
 def task2(x: typing.Optional[str] = None, y: typing.Optional[str] = None):
+    """
+    Task #2
+    Find X & Y that satisfy: X is divisible by Y and both X & Y are even. (0.5p)
+    """
     try:
         x = int(x) if x is not None else None
         y = int(y) if y is not None else None
+        _task2_find(x, y)
     except ValueError:
         print(f'Invalid input arguments: (\'{x}\', \'{y}\')')
-    _task2_find(x, y)
 
 
-#3 Check if X is divisible by Y (do it in one line of code), print 'X is divisible by Y' or 'X is not divisible by Y'. (1p)
 def task3(x: typing.Optional[str] = None, y: typing.Optional[str] = None):
+    """
+    Task #3
+    Check if X is divisible by Y (do it in one line of code), print 'X is divisible by Y' or 'X is not divisible by Y'. (1p)
+    """
     try:
         print(f'x = {x} is divisible by y = {y}' if int(x) % int(y) == 0 else f'x = {x} is not divisible y = {y}')
     except ValueError:
         print(f'Invalid input arguments: ({x}, {y})')
 
 
-#4 Add rounding for the above x/y operation. Round to 2 decimal points. Hint: look up in Google "python limiting number of decimals". (1p)
 def task4(x: str, y: str):
+    """
+    Task #4
+    Add rounding for the above x/y operation. Round to 2 decimal points. Hint: look up in Google "python limiting number of decimals". (1p)
+    """
     decimal.getcontext().prec = 2
     try:
         print('{0:.2f}'.format(decimal.Decimal(x) / decimal.Decimal(y)))
@@ -102,8 +109,15 @@ def task4(x: str, y: str):
         print(f'Invalid input arguments: ({x}, {y})')
 
 
-#5 Look at lab2-plot.py and create your own script which takes a number as an input and plots the same 3D wave but with different characteristics
 def task5(log_deviation):
+    """
+    Task #5
+    Look at lab2-plot.py and create your own script which takes a number as an input and plots the same 3D wave but with different characteristics
+    """
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import mpl_toolkits.mplot3d as plt3d
+
     log_deviation = float(log_deviation)
     x_knots = np.linspace(-3 * np.pi, 3 * np.pi, 201)
     y_knots = np.linspace(-3 * np.pi, 3 * np.pi, 201)
@@ -111,7 +125,7 @@ def task5(log_deviation):
     R = np.sqrt(X ** 2 + Y ** 2)
     # Z = np.cos(R) ** 2 * np.exp(-0.1 * R)
     Z = np.cos(R) ** 2 * np.log2(2*log_deviation + R)
-    ax = Axes3D(plt.figure(figsize=(8, 5)))
+    ax = plt3d.Axes3D(plt.figure(figsize=(8, 5)))
     ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=plt.cm.coolwarm, linewidth=0.4)
     plt.show()
 
@@ -124,7 +138,10 @@ def cli_interface(task, arguments):
     if not task or not hasattr(current_module, task):
         print(f'Nie znaleziono rozwiązania o nazwie: {task}')
         return
-    getattr(current_module, task)(*arguments)
+    try:
+        getattr(current_module, task)(*arguments)
+    except TypeError:
+        print('Podano nieprawidłową listę argumentów!')
 
 
 if __name__ == '__main__':
