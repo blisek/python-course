@@ -36,4 +36,4 @@ class DataProvider:
     def get_int(self, prompt: str = None, retry: bool = True):
         while True:
             s = self.get_non_empty_string(prompt, retry)
-
+            raise ValueError()
