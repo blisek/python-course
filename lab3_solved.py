@@ -21,6 +21,8 @@ class CircleFieldCalculator(FieldCalculator):
 
     def calculate_field(self, r) -> float:
         r = float(r)
+        if r < 0:
+            raise ValueError(f'r must be positive (got: {r})')
         return math.pi * r * r
 
 
@@ -29,12 +31,18 @@ class RectangleFieldCalculator(FieldCalculator):
     def calculate_field(self, a, b) -> float:
         a = float(a)
         b = float(b)
+        if a < 0 or b < 0:
+            raise ValueError(f'one of input arguments is lesser than 0 (a: {a}, b: {b})')
         return a * b
 
 
 class TriangleFieldCalculator(FieldCalculator):
 
     def calculate_field(self, a, h) -> float:
+        a = float(a)
+        h = float(h)
+        if a < 0 or h < 0:
+            raise ValueError(f'one of input arguments is lesser than 0 (a: {a}, h: {h})')
         return 0.5 * a * h
 
 
@@ -44,6 +52,8 @@ class RhombusFieldCalculator(FieldCalculator):
         a = float(a)
         b = float(b)
         diagonals = bool(diagonals)
+        if a < 0 or b < 0:
+            raise ValueError(f'one of input arguments is lesser than 0 (a: {a}, b: {b})')
         if diagonals:
             return 0.5 * a * b
         else:
@@ -72,8 +82,12 @@ def calculate_field(fig: Figure, *args) -> typing.Optional[float]:
     >>> calculate_field(Figure.CIRCLE)
     Traceback (most recent call last):
         ...
-    ValueError: Inalid arguments number (0)
+    ValueError: Invalid arguments number (0)
 
+    >>> calculate_field(Figure.CIRCLE, -1)
+    Traceback (most recent call last):
+        ...
+    ValueError: Runtime exception during processing request. Selected figure: Figure.CIRCLE; Input arguments: (-1,)
 
     """
     if fig is None:
@@ -81,7 +95,11 @@ def calculate_field(fig: Figure, *args) -> typing.Optional[float]:
     try:
         return _CALCULATORS[fig].calculate_field(*args)
     except TypeError:
-        raise ValueError(f'Inalid arguments number ({len(args)})')
+        raise ValueError(f'Invalid arguments number ({len(args)})')
+    except (ValueError, ZeroDivisionError):
+        raise ValueError(f'Runtime exception during processing request.'
+                         f' Selected figure: {fig};'
+                         f' Input arguments: {args}')
 
 
 def _calculate_figure_fields(figure, *args):
@@ -93,6 +111,10 @@ def _calculate_figure_fields(figure, *args):
     else:
         figure = Figure[str(figure).upper()]
     return calculate_field(figure, *args)
+
+
+def _assert_input_array(fig_arr):
+    pass
 
 
 def compare_figures_fields(figures: typing.List[typing.List[typing.Any]]):
@@ -110,7 +132,8 @@ def compare_figures_fields(figures: typing.List[typing.List[typing.Any]]):
     """
     if not figures:
         raise ValueError('no figures given')
-    pairs_of_calculated_fields = [(fig, _calculate_figure_fields(fig[0], *fig[1:])) for fig in figures]
+    pairs_of_calculated_fields = [(fig, _calculate_figure_fields(fig[0], *fig[1:])) for fig in figures if fig and
+                                  type(fig) in (tuple, list)]
     fields_pairs_sorted = sorted(pairs_of_calculated_fields, key=lambda x: x[1], reverse=True)
     print('The figure {0} has largest field ({1:.3f})'.format(*fields_pairs_sorted[0]))
     print('Figures fields sorted descending:')
