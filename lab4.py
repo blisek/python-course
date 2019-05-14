@@ -22,10 +22,10 @@ x[0] = initial_x
 for i in range(t.size-1):
     x[i+1] = x[i] + h * (1 * x[i])
 
-plt.plot(t,x,'o')
-plt.xlabel('t', fontsize=14)
-plt.ylabel('x', fontsize=14)
-plt.show()
+# plt.plot(t,x,'o')
+# plt.xlabel('t', fontsize=14)
+# plt.ylabel('x', fontsize=14)
+# plt.show()
 
 # parametry symulacji
 T = 20
@@ -44,12 +44,12 @@ for i in range(t.size-1):
     x[i+1] = x[i] + h*(y[i])
     y[i+1] = y[i] + h*(-b*x[i] - a*y[i])
 
-plt.plot(t,x,'k', label='x')
-plt.plot(t,y,'g', label='y')
-plt.xlabel('t', fontsize=14)
-plt.ylabel('state', fontsize=14)
-plt.legend(loc='upper right', fontsize=14)
-plt.show()
+# plt.plot(t,x,'k', label='x')
+# plt.plot(t,y,'g', label='y')
+# plt.xlabel('t', fontsize=14)
+# plt.ylabel('state', fontsize=14)
+# plt.legend(loc='upper right', fontsize=14)
+# plt.show()
 
 # skorygowany schemat Eulera
 T = 20
@@ -109,7 +109,8 @@ def f(x):
 def neg_f(x):
     return -f(x)
 
-x0 = random.randn(2)
+# x0 = random.randn(2)
+x0 = (0, -2)
 x_min = fmin(neg_f, x0)
 
 from mpl_toolkits.mplot3d import Axes3D
