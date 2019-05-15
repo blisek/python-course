@@ -10,6 +10,31 @@ _ID_COUNTER = 1
 _CURRENCY_USED_TO_BY = 'PLN'
 _CURRENCY_BEING_SOLD = 'BTC'
 
+_SERVICE_BTC_ONE = 'https://bitbay.net/API/Public/BTCPLN/ticker.json'
+_SERVICE_BTC_TWO = 'https://apiv2.bitcoinaverage.com/indices/global/ticker/BTCPLN?fbclid=IwAR0_XnPm2aRV2KpmifWQklAabfZDE-x-km1MV2qqny-NYf34z7K6xtSq2K0'
+
+
+def compare_exchange():
+    try:
+        _btc_one = requests.get(_SERVICE_BTC_ONE).json()
+        _btc_two = requests.get(_SERVICE_BTC_TWO).json()
+
+        ask_one, bid_one = float(_btc_one['ask']), float(_btc_one['bid'])
+        ask_two, bid_two = float(_btc_two['ask']), float(_btc_two['bid'])
+
+        ret_ask = 0
+        if ask_one > ask_two:
+            print(f"Bardziej opłaca się pierwszy ask_one: {ask_one}, ask_two: {ask_two}")
+        else:
+            print(f"Bardziej opłaca się drugi ask_one: {ask_one}, ask_two: {ask_two}")
+
+        if bid_one > bid_two:
+            print(f"Bardziej opłaca się pierwszy bid_one: {bid_one}, bid_two: {bid_two}")
+        else:
+            print(f"Bardziej opłaca się drugi bid_one: {bid_one}, bid_two: {bid_two}")
+    except Exception as err:
+        pass
+
 
 class User:
     __slots__ = ['id', 'gender', 'first_name', 'last_name', 'login', 'email', 'assets']
@@ -136,6 +161,8 @@ def simulate_transaction(user_pairs: _t.List[_t.Tuple[User, User]], exchange: di
 
 
 if __name__ == '__main__':
+    compare_exchange()
+
     users = get_random_users(100)
     users_joined = join_users_in_pairs(users)
 
@@ -146,3 +173,4 @@ if __name__ == '__main__':
     print('Running simulation...')
     simulation.start()
     simulation.join()
+
