@@ -32,6 +32,7 @@ def compare_exchange():
             print(f"Bardziej opłaca się pierwszy bid_one: {bid_one}, bid_two: {bid_two}")
         else:
             print(f"Bardziej opłaca się drugi bid_one: {bid_one}, bid_two: {bid_two}")
+        return {"buy": ask_one, "sell": bid_one}
     except Exception as err:
         pass
 
@@ -157,20 +158,22 @@ def simulate_transaction(user_pairs: _t.List[_t.Tuple[User, User]], exchange: di
         ret_transactions.append(transaction)
         print(transaction)
         if random.random() < .5:
-            time.sleep(.25)
+            time.sleep(.5)
 
 
 if __name__ == '__main__':
-    compare_exchange()
+    # compare_exchange()
+    # exchange_rate = {'buy': 22297.34, 'sell': 22272.34}
+    exchange_rate = compare_exchange()
 
-    users = get_random_users(100)
+    users = get_random_users(1000)
     users_joined = join_users_in_pairs(users)
 
     ret_transactions = []
-    exchange_rate = {'buy': 22297.34, 'sell': 22272.34}
     simulation = threading.Thread(target=simulate_transaction, args=[users_joined, exchange_rate, ret_transactions])
 
     print('Running simulation...')
+    print(f'BUY: {exchange_rate["buy"]}, SELL: {exchange_rate["sell"]}')
     simulation.start()
     simulation.join()
 
